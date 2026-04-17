@@ -39,7 +39,8 @@ function EditorContent() {
       { platform: 'Instagram', url: 'https://instagram.com/alexdoe' }
     ],
     projects: [
-      { title: "Bento Portfolio", description: "A highly customizable personal site.", link: "https://klresume.in", image: '' }
+      { title: "Personal Brand Engine", description: "A high-performance portfolio system built for creators.", link: "https://klresume.in", image: '/images/sampleproject1.webp' },
+      { title: "Design Systems Library", description: "Modular UI components for scalable web applications.", link: "https://github.com", image: '/images/sampleproject2.webp' }
     ],
     education: [
       { school: 'CUSAT', degree: 'B.Tech CS', year: '2022' }
@@ -47,7 +48,7 @@ function EditorContent() {
     experience: [
       { company: 'Tech Solutions', role: 'Dev Intern', duration: '6 Months', description: 'Worked on React components.' }
     ],
-    image: '',
+    image: '/images/sampleprofile.webp',
   });
 
   const [newSocial, setNewSocial] = useState({ platform: 'GitHub', url: '' });
@@ -57,9 +58,15 @@ function EditorContent() {
 
   useEffect(() => {
     const themeParam = searchParams.get('theme');
+    const previewParam = searchParams.get('preview');
+    
     if (themeParam && THEMES[themeParam]) {
       setFormData(prev => ({ ...prev, theme: themeParam }));
-      setCurrentStep(2); // Start at Identity after choosing theme
+      setCurrentStep(2); 
+    }
+
+    if (previewParam === 'true') {
+      setShowPreview(true);
     }
   }, [searchParams]);
 
@@ -198,10 +205,12 @@ function EditorContent() {
           KL RESUME
         </h1>
         <div className="flex items-center gap-3">
-          <button onClick={() => setShowPreview(true)} className="glassmorphism px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-white/10 transition text-sm text-white border border-white/10">
-            <Eye className="w-4 h-4" />
-            Preview
-          </button>
+          {currentStep !== 1 && (
+            <button onClick={() => setShowPreview(true)} className="glassmorphism px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-white/10 transition text-sm text-white border border-white/10">
+              <Eye className="w-4 h-4" />
+              Preview
+            </button>
+          )}
           {/* <button onClick={handleClaimUrl} className="bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl font-bold flex items-center gap-2 transition text-sm text-white border border-white/5">
             <LinkIcon className="w-4 h-4" />
             Share
