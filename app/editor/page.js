@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Sparkles, Save, Link as LinkIcon, Image as ImageIcon, Plus, Trash2, ChevronDown, Mail, MessageCircle, MapPin, ArrowRight, ArrowLeft, CheckCircle2, Eye, X } from 'lucide-react';
 import Link from 'next/link';
 import { savePortfolio } from '../actions';
@@ -16,7 +17,8 @@ const MALAYALAM_BIOS = [
   "Design aanu ente everything 🎨",
 ];
 
-export default function OnboardingEditor() {
+function EditorContent() {
+  const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [showPreview, setShowPreview] = useState(false);
   const totalSteps = 5;
@@ -52,6 +54,14 @@ export default function OnboardingEditor() {
   const [newProject, setNewProject] = useState({ title: '', description: '', link: '', image: '' });
   const [newEdu, setNewEdu] = useState({ school: '', degree: '', year: '' });
   const [newExp, setNewExp] = useState({ company: '', role: '', duration: '', description: '' });
+
+  useEffect(() => {
+    const themeParam = searchParams.get('theme');
+    if (themeParam && THEMES[themeParam]) {
+      setFormData(prev => ({ ...prev, theme: themeParam }));
+      setCurrentStep(5); // Jump to design step to show it
+    }
+  }, [searchParams]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -576,5 +586,13 @@ export default function OnboardingEditor() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function OnboardingEditor() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center text-white font-black italic">LOADING_ENGINE...</div>}>
+      <EditorContent />
+    </Suspense>
   );
 }

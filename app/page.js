@@ -21,9 +21,9 @@ export default function LandingPage() {
             <span className="text-xl font-black tracking-tighter">RESUME</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm font-bold text-zinc-400">
+            <Link href="/showcase" className="hover:text-white transition-colors">Showcase</Link>
             <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#themes" className="hover:text-white transition-colors">Themes</a>
-            <a href="#about" className="hover:text-white transition-colors">About</a>
+            <Link href="/about" className="hover:text-white transition-colors">About</Link>
           </div>
           <Link href="/editor" className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-black hover:bg-zinc-200 transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.2)]">
             CREATE NOW
@@ -66,7 +66,7 @@ export default function LandingPage() {
 
         {/* Hero Showcase Image */}
         <section className="px-6 mb-32">
-           <div className="max-w-6xl mx-auto rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl relative group">
+           <Link href="/showcase" className="max-w-6xl mx-auto rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl relative group block">
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-20"></div>
               <img 
                 src="file:///C:/Users/mdmis/.gemini/antigravity/brain/a3043960-e8fd-4d4d-9826-9df12905cabb/landing_hero_mockup_1776446183908.png" 
@@ -74,11 +74,11 @@ export default function LandingPage() {
                 className="w-full h-auto transform group-hover:scale-105 transition-transform duration-[2s]"
               />
               <div className="absolute bottom-12 left-12 z-30 flex flex-wrap gap-4">
-                 {['Bento Grid', 'Cyber HUD', 'Hacker Terminal', 'Glass Canvas'].map(tag => (
+                 {['View All Themes', 'Bento Grid', 'Cyber HUD', 'Hacker Terminal'].map(tag => (
                    <span key={tag} className="px-4 py-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-full text-xs font-black uppercase tracking-widest">{tag}</span>
                  ))}
               </div>
-           </div>
+           </Link>
         </section>
 
         {/* Features Grid */}
@@ -151,9 +151,9 @@ export default function LandingPage() {
             <p className="text-zinc-500 text-sm font-bold">The #1 Portfolio Engine for Kerala's Creators.</p>
           </div>
           <div className="flex gap-8 text-xs font-black text-zinc-500 tracking-widest uppercase">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
+            <Link href="/about" className="hover:text-white transition-colors">About</Link>
+            <Link href="/showcase" className="hover:text-white transition-colors">Themes</Link>
+            <Link href="/editor" className="hover:text-white transition-colors">Editor</Link>
           </div>
           <div className="flex items-center gap-2 text-zinc-500 font-bold text-sm">
             Made with <Heart className="w-4 h-4 text-pink-500 fill-pink-500" /> in Kerala
