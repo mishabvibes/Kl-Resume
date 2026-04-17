@@ -4,8 +4,9 @@ import { Inter } from 'next/font/google';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata = {
-  title: 'Gen Z Portfolio Engine | Kerala',
-  description: 'Create your aesthetic one-page portfolio to share on Instagram/WhatsApp.',
+  metadataBase: new URL('http://localhost:3000'),
+  title: 'KL RESUME - Professional Portfolio Engine',
+  description: 'Design your high-end portfolio in seconds. Premium themes for Kerala\'s top creators.',
 };
 
 export default function RootLayout({ children }) {
