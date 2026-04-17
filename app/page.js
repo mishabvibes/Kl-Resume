@@ -26,10 +26,14 @@ export default function OnboardingEditor() {
       { platform: 'LinkedIn', url: 'https://linkedin.com/in/alexdoe' },
       { platform: 'Instagram', url: 'https://instagram.com/alexdoe' }
     ],
+    projects: [
+      { title: "Bento Portfolio", description: "A highly customizable personal site.", link: "https://klresume.in" }
+    ],
     image: '',
   });
 
   const [newSocial, setNewSocial] = useState({ platform: 'GitHub', url: '' });
+  const [newProject, setNewProject] = useState({ title: '', description: '', link: '', image: '' });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,6 +46,17 @@ export default function OnboardingEditor() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prev) => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleProjectImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewProject((prev) => ({ ...prev, image: reader.result }));
       };
       reader.readAsDataURL(file);
     }
@@ -66,6 +81,23 @@ export default function OnboardingEditor() {
     setFormData(prev => ({
       ...prev,
       socialLinks: prev.socialLinks.filter((_, i) => i !== index)
+    }));
+  };
+
+  const addProject = () => {
+    if (newProject.title.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        projects: [...prev.projects, newProject]
+      }));
+      setNewProject({ title: '', description: '', link: '', image: '' });
+    }
+  };
+
+  const removeProject = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      projects: prev.projects.filter((_, i) => i !== index)
     }));
   };
 
@@ -209,6 +241,67 @@ export default function OnboardingEditor() {
               </div>
             </div>
 
+            {/* Dynamic Projects Showcase */}
+            <div className="flex flex-col gap-2 mt-4">
+              <h3 className="text-sm font-bold text-white border-b border-zinc-800 pb-2">Projects Showcase</h3>
+              
+              <div className="flex flex-col gap-3 mt-2">
+                {formData.projects.map((proj, index) => (
+                  <div key={index} className="flex flex-col gap-2 bg-zinc-800/50 border border-zinc-700 rounded-xl p-3 relative group overflow-hidden">
+                    {proj.image && (
+                      <div className="w-full h-24 mb-2 rounded-lg overflow-hidden bg-zinc-900 border border-zinc-800 shrink-0">
+                        <img src={proj.image} className="w-full h-full object-cover" alt="Project thumb" />
+                      </div>
+                    )}
+                    <h4 className="text-white font-bold text-sm pr-8 truncate">{proj.title}</h4>
+                    <p className="text-zinc-400 text-xs line-clamp-2">{proj.description}</p>
+                    {proj.link && <a href={proj.link} target="_blank" className="text-purple-400 text-xs hover:underline truncate">{proj.link}</a>}
+                    
+                    <button type="button" onClick={() => removeProject(index)} className="absolute top-3 right-3 text-red-400 hover:bg-red-500/20 p-1.5 rounded-lg transition sm:opacity-0 group-hover:opacity-100 flex items-center justify-center">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add New Project Form */}
+              <div className="flex flex-col gap-2 mt-2 bg-zinc-800/30 p-3 rounded-2xl border border-zinc-700/50">
+                <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 text-xs font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition outline-none">
+                  <ImageIcon className="w-4 h-4" />
+                  {newProject.image ? "Thumbnail Selected ✔" : "Upload Thumbnail (Optional)"}
+                  <input type="file" accept="image/*" onChange={handleProjectImageUpload} className="hidden" />
+                </label>
+                <input
+                  type="text"
+                  placeholder="Project Title (e.g. Aesthetic Notes App)"
+                  value={newProject.title}
+                  onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
+                  className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <input
+                  type="url"
+                  placeholder="Project Link URL"
+                  value={newProject.link}
+                  onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
+                  className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <textarea
+                  placeholder="Short description..."
+                  value={newProject.description}
+                  onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                  className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500 resize-none h-16"
+                />
+                <button
+                  type="button"
+                  onClick={addProject}
+                  disabled={!newProject.title.trim()}
+                  className="mt-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 text-white text-sm font-bold py-2 rounded-xl flex items-center justify-center gap-2 transition"
+                >
+                  <Plus className="w-4 h-4" /> Add Project
+                </button>
+              </div>
+            </div>
+
             <button disabled={isSaving} type="submit" className="mt-8 bg-white text-black font-bold py-3 px-6 rounded-xl flex justify-center items-center gap-2 hover:bg-zinc-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
               <Save className="w-5 h-5" />
               {isSaving ? "Saving..." : "Save All Changes"}
@@ -249,6 +342,26 @@ export default function OnboardingEditor() {
                   <span key={i} className="px-3 py-1 bg-zinc-800 rounded-full text-xs font-semibold">{skill.trim()}</span>
                 ))}
               </div>
+
+              {formData.projects?.length > 0 && (
+                <>
+                  <h3 className="text-lg font-bold mb-3 border-b border-zinc-800 pb-2">Projects</h3>
+                  <div className="flex flex-col gap-3 mb-8">
+                    {formData.projects.map((proj, idx) => (
+                      <div key={idx} className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden">
+                        {proj.image && (
+                          <div className="w-full h-32 rounded-lg bg-zinc-800 mb-3 overflow-hidden shrink-0">
+                            <img src={proj.image} className="w-full h-full object-cover" alt="Project Thumbnail" />
+                          </div>
+                        )}
+                        <h4 className="text-sm font-bold text-white mb-1">{proj.title}</h4>
+                        <p className="text-xs text-zinc-500 leading-relaxed mb-2 line-clamp-2">{proj.description}</p>
+                        {proj.link && <span className="text-xs font-bold text-purple-400">View Project ↗</span>}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
 
               <h3 className="text-lg font-bold mb-3 border-b border-zinc-800 pb-2 mt-auto pt-8">Connect</h3>
               <div className="flex flex-wrap gap-3">

@@ -33,8 +33,8 @@ async function getUserData(username) {
         malayalamTagline: "Oru cheriya developer, valiya swapnangal 🚀",
         skills: ["Next.js", "React", "MongoDB", "TailwindCSS", "Framer Motion"],
         projects: [
-          { title: "Bento Portfolio", description: "A highly customizable personal site with dynamic social cards.", link: "#" },
-          { title: "Aesthetic Notes App", description: "A minimal, offline-first notes application with a dark UI.", link: "#" },
+          { title: "Bento Portfolio", description: "A highly customizable personal site with dynamic social cards.", link: "#", image: "" },
+          { title: "Aesthetic Notes App", description: "A minimal, offline-first notes application with a dark UI.", link: "#", image: "" },
         ],
         socialLinks: [
           { platform: 'GitHub', url: 'https://github.com/alexdoe' },
@@ -152,12 +152,22 @@ export default async function DynamicPortfolioPage({ params }) {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {portfolio.projects?.map((project, idx) => (
-              <a key={idx} href={project.link} target="_blank" rel="noreferrer" className="group block p-5 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-purple-500/50 transition">
+              <a key={idx} href={project.link || '#'} target="_blank" rel="noreferrer" className="group block p-5 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-purple-500/50 transition">
+                {project.image && (
+                  <div className="w-full mb-5 rounded-xl overflow-hidden bg-zinc-950/50 border border-zinc-800/50 grayscale group-hover:grayscale-0 transition duration-500 flex justify-center items-center">
+                    <img src={project.image} alt={project.title} className="w-full h-auto object-contain transform group-hover:scale-[1.02] transition duration-500 max-h-[600px]" />
+                  </div>
+                )}
                 <div className="flex justify-between items-start mb-2">
                   <h4 className="text-xl font-bold text-zinc-100 group-hover:text-purple-400 transition">{project.title}</h4>
-                  <ArrowUpRight className="w-5 h-5 text-zinc-600 group-hover:text-purple-400 transition" />
+                  {project.link && <ArrowUpRight className="w-5 h-5 text-zinc-600 group-hover:text-purple-400 transition" />}
                 </div>
-                <p className="text-zinc-500 text-sm leading-relaxed">{project.description}</p>
+                <p className="text-zinc-500 text-sm leading-relaxed mb-4">{project.description}</p>
+                {project.link && (
+                  <span className="inline-flex items-center gap-1 text-xs font-bold text-purple-400 bg-purple-500/10 px-3 py-1.5 rounded-full group-hover:bg-purple-500/20 transition">
+                    View Project <ArrowUpRight className="w-3 h-3" />
+                  </span>
+                )}
               </a>
             ))}
           </div>
