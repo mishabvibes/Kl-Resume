@@ -6,7 +6,7 @@ export async function savePortfolio(formData) {
   try {
     await dbConnect();
     
-    const { name, username, bio, malayalamTagline, skills, socialLinks, image, projects } = formData;
+    const { name, username, bio, malayalamTagline, skills, socialLinks, image, projects, contactEmail, whatsapp, location } = formData;
     
     // Format the skills array
     const skillsArray = typeof skills === 'string' ? skills.split(',').map(s => s.trim()) : skills;
@@ -25,7 +25,10 @@ export async function savePortfolio(formData) {
           malayalamTagline,
           skills: skillsArray,
           socialLinks,
-          projects
+          projects,
+          contactEmail,
+          whatsapp,
+          location
         }
       },
       { new: true, upsert: true, setDefaultsOnInsert: true }

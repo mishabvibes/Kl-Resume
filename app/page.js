@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Sparkles, Save, Link as LinkIcon, Image as ImageIcon, Plus, Trash2, ChevronDown } from 'lucide-react';
+import { Sparkles, Save, Link as LinkIcon, Image as ImageIcon, Plus, Trash2, ChevronDown, Mail, MessageCircle, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { savePortfolio } from './actions';
 import { SocialIcon, PLATFORMS } from '@/components/SocialIcon';
@@ -20,6 +20,9 @@ export default function OnboardingEditor() {
     username: 'alex',
     bio: 'Creative Developer & Designer crafting next-generation digital experiences.',
     malayalamTagline: 'Oru cheriya developer, valiya swapnangal 🚀',
+    contactEmail: 'hello@alexdoe.com',
+    whatsapp: '+919876543210',
+    location: 'Kochi, Kerala',
     skills: 'Next.js, Tailwind, MongoDB',
     socialLinks: [
       { platform: 'GitHub', url: 'https://github.com/alexdoe' },
@@ -185,6 +188,25 @@ export default function OnboardingEditor() {
               <input type="text" name="malayalamTagline" value={formData.malayalamTagline} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500" />
             </div>
 
+            <div className="flex flex-col gap-2 mt-4">
+              <h3 className="text-sm font-bold text-white border-b border-zinc-800 pb-2">Contact & Location</h3>
+              
+              <div className="flex flex-col gap-2 mt-1">
+                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Public Contact Email</label>
+                <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleInputChange} placeholder="hello@example.com" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">WhatsApp (with country code)</label>
+                <input type="text" name="whatsapp" value={formData.whatsapp || ''} onChange={handleInputChange} placeholder="+919876543210" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Location</label>
+                <input type="text" name="location" value={formData.location || ''} onChange={handleInputChange} placeholder="Kochi, Kerala" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
+              </div>
+            </div>
+
             <div className="flex flex-col gap-2">
               <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Top Skills (comma separated)</label>
               <input type="text" name="skills" value={formData.skills} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500" />
@@ -326,15 +348,36 @@ export default function OnboardingEditor() {
               </div>
 
               <h2 className="text-3xl font-black mb-1">{formData.name || 'Your Name'}</h2>
-              <p className="text-zinc-400 font-medium mb-4">@{formData.username || 'username'}</p>
+              <p className="text-zinc-400 font-medium mb-2">@{formData.username || 'username'}</p>
+
+              {formData.location && (
+                <div className="flex items-center gap-1.5 text-zinc-500 text-sm font-semibold mb-4">
+                  <MapPin className="w-4 h-4" /> {formData.location}
+                </div>
+              )}
               
               <div className="px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-xl text-purple-300 text-sm font-medium mb-6 inline-block w-fit">
                 {formData.malayalamTagline || "Your vibe here..."}
               </div>
 
-              <p className="text-zinc-300 leading-relaxed mb-8">
+              <p className="text-zinc-300 leading-relaxed mb-6">
                 {formData.bio || 'Your bio will appear here.'}
               </p>
+
+              {(formData.contactEmail || formData.whatsapp) && (
+                <div className="flex flex-col gap-2 mb-8">
+                  {formData.contactEmail && (
+                    <a href={`mailto:${formData.contactEmail}`} className="w-full bg-white text-black font-extrabold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-zinc-200 transition">
+                      <Mail className="w-4 h-4" /> Let's Connect
+                    </a>
+                  )}
+                  {formData.whatsapp && (
+                    <a href={`https://wa.me/${formData.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="w-full bg-[#25D366]/20 text-[#25D366] font-extrabold py-3 border border-[#25D366]/30 rounded-xl flex items-center justify-center gap-2 hover:bg-[#25D366]/30 transition">
+                      <MessageCircle className="w-4 h-4" /> Message on WhatsApp
+                    </a>
+                  )}
+                </div>
+              )}
 
               <h3 className="text-lg font-bold mb-3 border-b border-zinc-800 pb-2">Skills</h3>
               <div className="flex flex-wrap gap-2 mb-8">

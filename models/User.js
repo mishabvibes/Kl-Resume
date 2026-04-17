@@ -19,6 +19,9 @@ const UserSchema = new mongoose.Schema({
       image: String,
     }],
     malayalamTagline: String, // E.g. "Pani edukuvam, poya kanum..."
+    contactEmail: String,
+    whatsapp: String,
+    location: String,
   },
   theme: { type: String, default: 'dark' }, // dark/light/bento
 }, { timestamps: true });

@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { Calendar, ExternalLink, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Calendar, ExternalLink, ArrowUpRight, Sparkles, Mail, MessageCircle, MapPin } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import Link from 'next/link';
@@ -31,6 +31,9 @@ async function getUserData(username) {
       portfolio: {
         bio: "Creative Developer & Designer crafting next-generation digital experiences. Exploring the boundaries of Gen-Z aesthetics and modern web tech.",
         malayalamTagline: "Oru cheriya developer, valiya swapnangal 🚀",
+        contactEmail: "hello@alexdoe.com",
+        whatsapp: "+919876543210",
+        location: "Kochi, Kerala",
         skills: ["Next.js", "React", "MongoDB", "TailwindCSS", "Framer Motion"],
         projects: [
           { title: "Bento Portfolio", description: "A highly customizable personal site with dynamic social cards.", link: "#", image: "" },
@@ -101,7 +104,14 @@ export default async function DynamicPortfolioPage({ params }) {
               <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2">
                 {user.name}
               </h1>
-              <p className="text-zinc-400 font-medium text-lg mb-4">@{user.username}</p>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4">
+                <p className="text-zinc-400 font-medium text-lg">@{user.username}</p>
+                {portfolio.location && (
+                  <div className="flex items-center gap-1.5 text-zinc-500 text-sm font-semibold">
+                    <MapPin className="w-4 h-4" /> {portfolio.location}
+                  </div>
+                )}
+              </div>
               {portfolio.malayalamTagline && (
                 <div className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30 rounded-2xl text-purple-200 text-sm font-semibold inline-block shadow-lg">
                   {portfolio.malayalamTagline}
@@ -127,9 +137,23 @@ export default async function DynamicPortfolioPage({ params }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div className="bento-card flex flex-col">
             <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest mb-4">About Me</h3>
-            <p className="text-zinc-300 text-lg leading-relaxed font-medium">
+            <p className="text-zinc-300 text-lg leading-relaxed font-medium mb-6">
               {portfolio.bio}
             </p>
+            {(portfolio.contactEmail || portfolio.whatsapp) && (
+              <div className="mt-auto flex flex-col xl:flex-row gap-3 pt-4 border-t border-zinc-800/50">
+                {portfolio.contactEmail && (
+                  <a href={`mailto:${portfolio.contactEmail}`} className="flex-1 inline-flex items-center gap-2 justify-center bg-white hover:bg-zinc-200 text-black font-extrabold py-3 px-6 rounded-xl transition shadow-xl text-sm">
+                    <Mail className="w-4 h-4" /> Let's Connect
+                  </a>
+                )}
+                {portfolio.whatsapp && (
+                  <a href={`https://wa.me/${portfolio.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="flex-1 inline-flex items-center gap-2 justify-center bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] font-extrabold py-3 px-6 border border-[#25D366]/30 rounded-xl transition text-sm">
+                    <MessageCircle className="w-4 h-4" /> WhatsApp
+                  </a>
+                )}
+              </div>
+            )}
           </div>
           
           <div className="bento-card flex flex-col">
