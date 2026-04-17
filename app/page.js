@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { savePortfolio } from './actions';
 import { SocialIcon, PLATFORMS } from '@/components/SocialIcon';
 import { THEMES } from './themes';
+import { ThemeLayouts } from '@/components/themes';
 
 const MALAYALAM_BIOS = [
   "Freelance Editor by day, Cinephile by night 🎬",
@@ -116,9 +117,14 @@ export default function OnboardingEditor() {
     setIsSaving(true);
     try {
       const response = await savePortfolio(formData);
-      alert(response.message || "Portfolio saved efficiently!");
+      if (response && response.success === false) {
+        alert(response.message || "Action failed to save portfolio.");
+      } else {
+        alert(response?.message || "Portfolio saved efficiently!");
+      }
     } catch (error) {
-      alert("Error saving data!");
+      console.error(error);
+      alert("Error saving data! If you uploaded a large image, it might exceed the server limits.");
     } finally {
       setIsSaving(false);
     }
@@ -412,109 +418,15 @@ export default function OnboardingEditor() {
           </form>
         </div>
 
-        {/* The Live Dashboard Preview using Dynamic Themes */}
-        <div className="sticky top-8 hidden lg:flex justify-center items-start">
-          <div className={`w-[375px] h-[750px] border-[8px] border-zinc-800 rounded-[2.5rem] overflow-hidden shadow-2xl relative ${THEMES[formData.theme]?.bgWrapper.replace('min-h-screen', '') || ''}`}>
-            
-            {/* Background Blob Renders */}
-            {THEMES[formData.theme]?.renderBlobs && (
-              <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-purple-600/30 blur-[80px]"></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-pink-600/30 blur-[80px]"></div>
-              </div>
-            )}
-
+        {/* The Live Dashboard Preview using Dynamic Component Themes */}
+        <div className="sticky top-8 hidden lg:flex justify-center items-start group">
+          <div className="w-[340px] xl:w-[375px] h-[720px] xl:h-[780px] border-[12px] border-zinc-950 rounded-[3rem] overflow-hidden shadow-[0_40px_100px_-20px_rgba(0,0,0,0.6)] relative bg-zinc-950 outline outline-1 outline-zinc-800">
             {/* Inner Profile Scroll Area */}
-            <div className="p-5 pt-12 flex flex-col h-full relative z-10 overflow-y-auto hide-scrollbar">
-              
-              <div className="w-24 h-24 rounded-full mx-auto mb-6 p-1 bg-gradient-to-br from-purple-400 to-pink-500 shrink-0">
-                <div className="w-full h-full rounded-full bg-black border-2 border-transparent overflow-hidden flex items-center justify-center">
-                  {formData.image ? (
-                    <img src={formData.image} alt="Profile" className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-zinc-500 text-xs text-center font-bold">Image</span>
-                  )}
-                </div>
-              </div>
-
-              <div className="text-center mb-6">
-                <h2 className={`${THEMES[formData.theme]?.title}`}>{formData.name || 'Your Name'}</h2>
-                <p className={`${THEMES[formData.theme]?.accentText} mb-3`}>@{formData.username || 'username'}</p>
-
-                {formData.location && (
-                  <div className={`flex items-center justify-center gap-1.5 ${THEMES[formData.theme]?.accentText} text-sm mb-3`}>
-                    <MapPin className="w-4 h-4" /> {formData.location}
-                  </div>
-                )}
-                
-                {formData.malayalamTagline && (
-                  <div className="mb-4">
-                    <span className={THEMES[formData.theme]?.taglineBadge}>
-                      {formData.malayalamTagline}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Bio & Contact Card */}
-              <div className={`${THEMES[formData.theme]?.card} mb-6`}>
-                <p className="text-sm leading-relaxed mb-6 font-medium opacity-90">
-                  {formData.bio || 'Your bio will appear here.'}
-                </p>
-
-                {(formData.contactEmail || formData.whatsapp) && (
-                  <div className="flex flex-col gap-3">
-                    {formData.contactEmail && (
-                      <a href="#" className={`w-full py-3 flex items-center justify-center gap-2 transition ${THEMES[formData.theme]?.primaryButton}`}>
-                        <Mail className="w-4 h-4" /> Let's Connect
-                      </a>
-                    )}
-                    {formData.whatsapp && (
-                      <a href="#" className={`w-full py-3 flex items-center justify-center gap-2 transition ${THEMES[formData.theme]?.primaryButton} !bg-[#25D366]/10 !text-[#25D366] !border-[#25D366]`}>
-                        <MessageCircle className="w-4 h-4" /> WhatsApp
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Skills Card */}
-              <div className={`${THEMES[formData.theme]?.card} mb-6`}>
-                <h3 className="text-xs font-bold uppercase tracking-widest mb-4 opacity-50">Skills</h3>
-                <div className="flex flex-wrap gap-2">
-                  {formData.skills.split(',').map((skill, i) => (
-                    <span key={i} className={THEMES[formData.theme]?.skillBadge}>{skill.trim()}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Projects Card */}
-              {formData.projects?.length > 0 && (
-                <div className="mb-6 flex flex-col gap-4">
-                  <h3 className="text-xs font-bold uppercase tracking-widest mb-1 opacity-50 px-2">Projects</h3>
-                  {formData.projects.map((proj, idx) => (
-                    <div key={idx} className={`${THEMES[formData.theme]?.projectCard}`}>
-                      {proj.image && (
-                        <div className={`w-full h-32 overflow-hidden flex items-center justify-center ${THEMES[formData.theme]?.projectThumb}`}>
-                          <img src={proj.image} className="w-full h-full object-cover" alt="" />
-                        </div>
-                      )}
-                      <h4 className="text-sm font-bold mb-1 opacity-90">{proj.title}</h4>
-                      <p className="text-xs leading-relaxed opacity-70 line-clamp-2">{proj.description}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Social Navigation */}
-              <div className="flex flex-wrap gap-3 justify-center mt-auto pt-6 pb-6 border-t border-white/10">
-                {formData.socialLinks.map((link, idx) => (
-                  <div key={idx} className={`w-10 h-10 flex items-center justify-center transition cursor-pointer ${THEMES[formData.theme]?.socialIconBg}`}>
-                    <SocialIcon platform={link.platform} className="w-4 h-4 flex-shrink-0" />
-                  </div>
-                ))}
-              </div>
-
+            <div className="w-full h-full overflow-y-auto hide-scrollbar bg-black">
+              {(() => {
+                const LayoutComponent = ThemeLayouts[formData.theme] || ThemeLayouts['bento-dark'];
+                return <LayoutComponent data={{ ...formData, portfolio: { ...formData, skills: typeof formData.skills === 'string' ? formData.skills.split(',').map(s => s.trim()) : formData.skills } }} />
+              })()}
             </div>
           </div>
         </div>

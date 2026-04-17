@@ -1,4 +1,4 @@
-import { Link as LinkIcon, Instagram, Github, Linkedin, Youtube, Twitter, Gitlab, Discord, Dribbble, Codepen, Figma, Framer, Twitch, PenTool, Code, Monitor } from 'lucide-react';
+import { Link as LinkIcon, Instagram, Github, Linkedin, Youtube, Twitter, Gitlab, Dribbble, Codepen, Figma, Framer, Twitch, PenTool, Code, Monitor, MessageSquare } from 'lucide-react';
 
 export const PLATFORMS = [
   'GitHub', 'GitLab', 'Bitbucket', 'Stack Overflow', 'Dev.to', 'Hashnode', 'CodePen', 'Replit',
@@ -16,7 +16,7 @@ export const SocialIcon = ({ platform, className }) => {
   if (p.includes('youtube')) return <Youtube className={className} />;
   if (p.includes('x') || p.includes('twitter')) return <Twitter className={className} />;
   if (p.includes('gitlab')) return <Gitlab className={className} />;
-  if (p.includes('discord')) return <Discord className={className} />;
+  if (p.includes('discord')) return <MessageSquare className={className} />;
   if (p.includes('dribbble')) return <Dribbble className={className} />;
   if (p.includes('codepen')) return <Codepen className={className} />;
   if (p.includes('figma')) return <Figma className={className} />;
