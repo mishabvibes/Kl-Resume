@@ -1,121 +1,140 @@
 "use client";
 import React from 'react';
-import { Mail, MessageCircle, MapPin, ExternalLink, ArrowUpRight, Monitor, Cpu } from 'lucide-react';
+import { Mail, MessageCircle, MapPin, ArrowUpRight, Github, ExternalLink, Sparkles } from 'lucide-react';
 import { SocialIcon } from '../SocialIcon';
 
 export default function RetroTheme({ data }) {
   const { portfolio } = data;
 
   return (
-    <div className="min-h-screen bg-[#120458] text-[#ff00e0] font-mono pb-24 relative overflow-hidden selection:bg-[#00f3ff] selection:text-black">
-      {/* Scanline & Grid Effect */}
-      <div className="fixed inset-0 pointer-events-none z-50 opacity-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]"></div>
+    <div className="min-h-screen bg-[#FFF4E0] text-black font-sans pb-24 selection:bg-[#B4E1FF]">
       
-      {/* 80s Grid Floor */}
-      <div className="fixed bottom-0 left-0 w-full h-[50vh] bg-[linear-gradient(transparent,#2d0b5a),linear-gradient(90deg,#ff00e055_1px,transparent_1px),linear-gradient(#ff00e055_1px,transparent_1px)] bg-[length:100%_100%,40px_40px,40px_40px] [transform:perspective(500px)_rotateX(60deg)_translateY(100px)] [transform-origin:bottom] z-0 opacity-40"></div>
+      {/* Neo-Brutalist Hero Section */}
+      <header className="pt-20 pb-12 px-6 max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+        <div className="relative group">
+           <div className="absolute top-4 left-4 w-full h-full bg-black rounded-3xl"></div>
+           <div className="relative w-48 h-48 md:w-64 md:h-64 bg-[#B4E1FF] border-4 border-black rounded-3xl overflow-hidden shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              {data.image ? (
+                <img src={data.image} alt="" className="w-full h-full object-cover grayscale active:grayscale-0 transition-all duration-500" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center font-black text-2xl uppercase italic">User_Img</div>
+              )}
+           </div>
+        </div>
 
-      <main className="max-w-4xl mx-auto px-6 pt-16 relative z-10">
-        <header className="text-center mb-16 px-4 py-8 border-4 border-[#ff00e0] bg-[#120458] shadow-[0_0_20px_#ff00e0,inset_0_0_10px_#ff00e0]">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-             <div className="relative shrink-0">
-                <div className="absolute -inset-4 border-2 border-[#00f3ff] animate-pulse"></div>
-                <div className="w-32 h-32 border-4 border-[#ff00e0] bg-black overflow-hidden relative">
-                   {data.image ? (
-                     <img src={data.image} alt="" className="w-full h-full object-cover grayscale brightness-125 contrast-125" />
-                   ) : (
-                     <div className="w-full h-full flex items-center justify-center text-[10px]">&gt; NOIMG</div>
-                   )}
+        <div className="flex-1 text-center md:text-left">
+           <div className="inline-block bg-yellow-300 border-2 border-black px-4 py-1 font-black uppercase text-sm mb-6 rotate-[-2deg] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              Available for projects
+           </div>
+           <h1 className="text-5xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85] mb-6">
+             {data.name}
+           </h1>
+           <p className="text-xl md:text-2xl font-bold mb-8">
+             @{data.username} &bull; <span className="underline decoration-4 decoration-[#B4E1FF]">Creative Engineer</span>
+           </p>
+           
+           <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+              {portfolio?.location && (
+                <div className="flex items-center gap-2 font-black text-sm border-2 border-black bg-white px-4 py-2 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                  <MapPin className="w-4 h-4 text-red-500" /> {portfolio.location}
                 </div>
-             </div>
-             <div className="text-center md:text-left flex-1">
-                <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter mb-2 text-[#00f3ff] drop-shadow-[4px_4px_0px_#ff00e0]">
-                  {data.name}
-                </h1>
-                <p className="text-xl md:text-2xl font-bold bg-[#ff00e0] text-[#120458] px-4 py-1 inline-block skew-x-[-12deg]">
-                  @{data.username}
-                </p>
-                <div className="flex flex-wrap gap-4 mt-6 justify-center md:justify-start uppercase text-[10px] md:text-xs font-bold tracking-widest">
-                   {portfolio?.location && <div className="flex items-center gap-2 text-[#00f3ff]"><MapPin className="w-4 h-4" /> {portfolio.location}</div>}
-                   <div className="flex items-center gap-2 text-white"><Cpu className="w-4 h-4" /> RETROVIBE_SYSTEM_ACTIVE</div>
-                </div>
-             </div>
-          </div>
-        </header>
+              )}
+              <div className="flex items-center gap-2 font-black text-sm border-2 border-black bg-[#FFD6EC] px-4 py-2 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <Sparkles className="w-4 h-4 text-purple-600" /> MALAYALI_ORIGIN
+              </div>
+           </div>
+        </div>
+      </header>
 
-        <section className="border-4 border-[#00f3ff] bg-[#120458] p-6 md:p-10 mb-8 shadow-[0_0_15px_#00f3ff] relative before:absolute before:top-0 before:left-0 before:w-full before:h-1 before:bg-[#ff00e0]">
-          <div className="flex items-center gap-4 mb-8">
-             <Monitor className="w-6 h-6 text-[#00f3ff]" />
-             <h3 className="text-xl font-black bg-[#00f3ff] text-black px-4 py-1 skew-x-[-15deg]">SYSTEM PROFILE</h3>
-          </div>
-          <p className="text-lg md:text-2xl leading-relaxed text-white">
-            {portfolio?.bio}
-          </p>
-          {portfolio?.malayalamTagline && (
-             <div className="mt-8 border-l-4 border-[#ff00e0] pl-6 py-2 text-[#ff00e0] font-bold text-sm md:text-lg">
-               &gt; {portfolio.malayalamTagline}
+      <main className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        {/* Bio Section */}
+        <section className="lg:col-span-8 bg-white border-4 border-black p-8 md:p-12 rounded-[2.5rem] shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
+           <h3 className="text-xs font-black uppercase tracking-[0.3em] mb-8 text-zinc-400 border-b-2 border-zinc-100 pb-2">Identification / Biography</h3>
+           <p className="text-2xl md:text-4xl font-black leading-tight mb-10">
+             {portfolio?.bio}
+           </p>
+           {portfolio?.malayalamTagline && (
+             <div className="inline-block bg-[#B4E1FF] border-2 border-black px-6 py-3 font-bold text-lg md:text-xl rounded-2xl rotate-[1deg] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+               &ldquo;{portfolio.malayalamTagline}&rdquo;
              </div>
-          )}
+           )}
         </section>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-16">
-           <div className="md:col-span-2 border-4 border-[#ff00e0] bg-[#120458] p-6 shadow-[0_0_15px_#ff00e0] flex flex-col justify-center items-center">
-              <h3 className="text-xs font-black uppercase mb-6 bg-[#ff00e0] text-black px-4 py-1 w-full text-center">NETWORK_LINK</h3>
-              <div className="flex flex-wrap gap-3 mb-8 justify-center">
+        {/* Sidebar Info */}
+        <div className="lg:col-span-4 space-y-8">
+           <div className="bg-[#B4FFC2] border-4 border-black p-8 rounded-[2rem] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <h3 className="text-[10px] font-black uppercase mb-6 tracking-widest bg-black text-white px-3 py-1 w-fit">Tech arsenal</h3>
+              <div className="flex flex-wrap gap-2">
+                 {portfolio?.skills?.map((skill, index) => (
+                   <span key={index} className="px-3 py-2 bg-white border-2 border-black font-black text-xs uppercase hover:bg-yellow-300 transition-colors">
+                     {skill}
+                   </span>
+                 ))}
+              </div>
+           </div>
+
+           <div className="bg-[#FFD6EC] border-4 border-black p-8 rounded-[2rem] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+              <h3 className="text-[10px] font-black uppercase mb-6 tracking-widest bg-black text-white px-3 py-1 w-fit">Direct links</h3>
+              <div className="flex flex-wrap gap-3 mb-8">
                 {portfolio?.socialLinks?.map((link, idx) => (
-                  <a key={idx} href={link.url} target="_blank" className="w-12 h-12 border-2 border-[#00f3ff] flex items-center justify-center hover:bg-[#00f3ff] hover:text-black transition-all">
+                  <a key={idx} href={link.url} target="_blank" className="w-12 h-12 bg-white border-2 border-black flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none">
                     <SocialIcon platform={link.platform} className="w-5 h-5" />
                   </a>
                 ))}
               </div>
-              <div className="w-full flex flex-col gap-2">
+              <div className="space-y-3">
                  {portfolio?.contactEmail && (
-                   <a href={`mailto:${portfolio.contactEmail}`} className="w-full border-2 border-[#00f3ff] text-[#00f3ff] font-black py-3 text-sm text-center hover:bg-[#00f3ff] hover:text-black transition-all">
-                     SEND_COMMAND
+                   <a href={`mailto:${portfolio.contactEmail}`} className="w-full bg-black text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-white hover:text-black hover:border-black border-2 border-transparent transition-all shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)]">
+                     <Mail className="w-5 h-5" /> Message
                    </a>
                  )}
                  {portfolio?.whatsapp && (
-                   <a href={`https://wa.me/${portfolio.whatsapp?.replace(/[^0-9]/g, '')}`} target="_blank" className="w-full border-2 border-[#ff00e0] text-[#ff00e0] font-black py-3 text-sm text-center hover:bg-[#ff00e0] hover:text-black transition-all">
-                     PING_NODE
+                   <a href={`https://wa.me/${portfolio.whatsapp?.replace(/[^0-9]/g, '')}`} target="_blank" className="w-full bg-white border-2 border-black text-black font-black py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[#25D366] hover:text-white transition-all active:scale-95">
+                     <MessageCircle className="w-5 h-5" /> WhatsApp
                    </a>
                  )}
               </div>
            </div>
-
-           <div className="md:col-span-3 border-4 border-[#00f3ff] bg-[#120458] p-6 shadow-[0_0_15px_#00f3ff] relative overflow-hidden">
-              <h3 className="text-xs font-black uppercase mb-6 bg-[#00f3ff] text-black px-4 py-1">TECH_STACK.exe</h3>
-              <div className="flex flex-wrap gap-3">
-                {portfolio?.skills?.map((skill, index) => (
-                  <span key={index} className="px-3 py-1 bg-black border border-[#00f3ff] text-[10px] md:text-xs font-bold text-white uppercase hover:bg-[#ff00e0] hover:border-[#ff00e0] transition-all">
-                    [{skill}]
-                  </span>
-                ))}
-              </div>
-              <div className="absolute bottom-[-10px] right-[-10px] text-[60px] font-black opacity-10 select-none">VRC</div>
-           </div>
         </div>
 
+        {/* Projects Section */}
         {portfolio?.projects?.length > 0 && (
-          <div className="space-y-4">
-             {portfolio.projects.map((project, idx) => (
-               <a key={idx} href={project.link || '#'} target="_blank" className="group block border-4 border-[#ff00e0] bg-black p-4 relative overflow-hidden hover:border-[#00f3ff] transition-all duration-300">
-                  <div className="absolute top-0 right-0 px-4 py-1 bg-[#ff00e0] text-black text-[10px] font-black group-hover:bg-[#00f3ff]">0x{idx + 1}</div>
-                  <div className="flex flex-col md:flex-row gap-6">
-                     {project.image && (
-                       <div className="w-full md:w-1/3 aspect-video bg-[#120458] border-2 border-[#00f3ff] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500">
-                         <img src={project.image} alt="" className="w-full h-full object-cover" />
-                       </div>
-                     )}
-                     <div className="flex-1">
-                        <h4 className="text-2xl font-black text-[#00f3ff] mb-2 uppercase group-hover:text-white transition-colors">{project.title}</h4>
-                        <p className="text-white text-xs md:text-sm leading-relaxed mb-4 group-hover:text-[#ff00e0] transition-colors">{project.description}</p>
-                        <span className="text-[10px] font-black inline-block text-[#00f3ff] border-b-2 border-transparent group-hover:border-[#00f3ff] transition-all">EXECUTE_VIEW &gt;_ </span>
-                     </div>
-                  </div>
-               </a>
-             ))}
-          </div>
+          <section className="lg:col-span-12 space-y-8 pt-12">
+             <div className="flex items-center gap-4">
+                <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">Case Files</h3>
+                <div className="flex-1 h-1 bg-black"></div>
+             </div>
+             
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+               {portfolio.projects.map((project, idx) => (
+                 <a key={idx} href={project.link || '#'} target="_blank" className="group block bg-white border-4 border-black rounded-[3rem] p-6 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] transition-all relative overflow-hidden">
+                    <div className="absolute top-6 right-6 p-3 bg-black text-white rounded-full group-hover:rotate-45 transition-transform">
+                       <ArrowUpRight className="w-5 h-5" />
+                    </div>
+                    {project.image && (
+                      <div className="w-full aspect-video border-4 border-black rounded-[2rem] overflow-hidden mb-8 bg-zinc-100">
+                        <img src={project.image} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                      </div>
+                    )}
+                    <h4 className="text-3xl md:text-4xl font-black uppercase mb-4 tracking-tighter italic group-hover:text-blue-600 transition-colors">{project.title}</h4>
+                    <p className="text-lg md:text-xl font-bold text-zinc-600 leading-tight mb-6">{project.description}</p>
+                    <div className="inline-block bg-zinc-900 px-6 py-2 rounded-full text-white font-bold uppercase text-xs tracking-widest group-hover:bg-[#B4E1FF] group-hover:text-black transition-colors">
+                       View Case Study
+                    </div>
+                 </a>
+               ))}
+             </div>
+          </section>
         )}
       </main>
+
+      {/* Decorative Marks */}
+      <footer className="max-w-6xl mx-auto px-6 mt-24 text-center">
+         <div className="p-8 border-t-2 border-black/10">
+            <p className="text-[10px] font-black uppercase tracking-[0.5em] opacity-20">EST. 2026 &copy; ALL_RIGHTS_RESERVED</p>
+         </div>
+      </footer>
     </div>
   );
 }
