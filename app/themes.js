@@ -18,7 +18,7 @@ export const THEMES = {
     name: 'Aurora Night',
   },
   'retro-synth': {
-    name: 'Retro Synthwave',
+    name: 'Neo-Brutalist Bold',
   },
   'glass-soft': {
     name: 'Glassmorphism Soft',
