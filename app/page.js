@@ -5,6 +5,7 @@ import { Sparkles, Save, Link as LinkIcon, Image as ImageIcon, Plus, Trash2, Che
 import Link from 'next/link';
 import { savePortfolio } from './actions';
 import { SocialIcon, PLATFORMS } from '@/components/SocialIcon';
+import { THEMES } from './themes';
 
 const MALAYALAM_BIOS = [
   "Freelance Editor by day, Cinephile by night 🎬",
@@ -27,13 +28,14 @@ export default function OnboardingEditor() {
     whatsapp: '+919876543210',
     location: 'Kochi, Kerala',
     skills: 'Next.js, Tailwind, MongoDB',
+    theme: 'bento-dark',
     socialLinks: [
       { platform: 'GitHub', url: 'https://github.com/alexdoe' },
       { platform: 'LinkedIn', url: 'https://linkedin.com/in/alexdoe' },
       { platform: 'Instagram', url: 'https://instagram.com/alexdoe' }
     ],
     projects: [
-      { title: "Bento Portfolio", description: "A highly customizable personal site.", link: "https://klresume.in" }
+      { title: "Bento Portfolio", description: "A highly customizable personal site.", link: "https://klresume.in", image: '' }
     ],
     image: '',
   });
@@ -136,7 +138,7 @@ export default function OnboardingEditor() {
         <h1 className="text-2xl font-black tracking-tighter bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
           KL RESUME
         </h1>
-        <button onClick={handleClaimUrl} className="glassmorphism px-4 py-2 rounded-full font-semibold flex items-center gap-2 hover:bg-white/20 transition">
+        <button onClick={handleClaimUrl} className="glassmorphism px-4 py-2 rounded-full font-semibold flex items-center gap-2 hover:bg-white/20 transition text-white">
           <LinkIcon className="w-4 h-4" />
           Claim URL
         </button>
@@ -147,12 +149,12 @@ export default function OnboardingEditor() {
         <div className="bento-card flex flex-col">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-xl font-bold flex items-center gap-2">
+              <h2 className="text-xl font-bold flex items-center gap-2 text-white">
                 <Sparkles className="w-5 h-5 text-yellow-400" />
                 Customize Portfolio
               </h2>
               <p className="text-xs text-zinc-400 mt-2 font-semibold uppercase tracking-widest">
-                Step {currentStep} of {totalSteps}: {['Personal Info', 'Contact & Socials', 'Skills & Projects', 'Deploy'][currentStep - 1]}
+                Step {currentStep} of {totalSteps}: {['Personal Info', 'Contact & Socials', 'Skills & Projects', 'Design & Deploy'][currentStep - 1]}
               </p>
             </div>
           </div>
@@ -343,24 +345,46 @@ export default function OnboardingEditor() {
               </div>
             )}
 
-            {/* STEP 4: FINAL DEPLOYMENT */}
+            {/* STEP 4: DESIGN & DEPLOYMENT */}
             {currentStep === 4 && (
-              <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300 items-center text-center py-10">
-                <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mb-2">
-                  <CheckCircle2 className="w-8 h-8" />
+              <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-bold text-white uppercase tracking-widest">Select Portfolio Theme</label>
+                  <p className="text-xs text-zinc-400 mb-2">Choose from 10 radically different aesthetics. The Live Preview on the right will instantly rebuild your entire layout!</p>
+                  
+                  <div className="grid grid-cols-2 gap-3 pb-4">
+                    {Object.entries(THEMES).map(([key, t]) => (
+                      <button
+                        key={key}
+                        onClick={() => setFormData(prev => ({...prev, theme: key}))}
+                        type="button"
+                        className={`p-3 rounded-xl border text-left transition ${
+                          formData.theme === key 
+                            ? 'bg-purple-500/20 border-purple-500 text-white scale-[1.02]' 
+                            : 'bg-zinc-800/50 border-zinc-700 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+                        }`}
+                      >
+                        <p className="font-bold text-sm tracking-tight">{t.name}</p>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <h3 className="text-2xl font-black text-white">You're Ready to Publish!</h3>
-                <p className="text-zinc-400">Review your live portfolio on the right. If everything looks perfect, click save below to deploy to the live URL.</p>
-                
-                <button 
-                  type="button"
-                  disabled={isSaving} 
-                  onClick={handleSave} 
-                  className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black py-4 px-6 rounded-2xl flex justify-center items-center gap-2 hover:from-purple-500 hover:to-pink-500 shadow-xl shadow-purple-500/20 transition disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-                >
-                  <Save className="w-5 h-5" />
-                  {isSaving ? "Saving Portfolio..." : "Deploy Portfolio"}
-                </button>
+
+                <div className="items-center text-center py-6 border-t border-zinc-800/50">
+                  <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <CheckCircle2 className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-2xl font-black text-white">You're Ready to Publish!</h3>
+                  <button 
+                    type="button"
+                    disabled={isSaving} 
+                    onClick={handleSave} 
+                    className="mt-6 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black py-4 px-6 rounded-2xl flex justify-center items-center gap-2 hover:from-purple-500 hover:to-pink-500 shadow-xl shadow-purple-500/20 transition disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                  >
+                    <Save className="w-5 h-5" />
+                    {isSaving ? "Saving Portfolio..." : "Deploy Portfolio"}
+                  </button>
+                </div>
               </div>
             )}
 
@@ -388,89 +412,109 @@ export default function OnboardingEditor() {
           </form>
         </div>
 
-        {/* The Live Preview */}
+        {/* The Live Dashboard Preview using Dynamic Themes */}
         <div className="sticky top-8 hidden lg:flex justify-center items-start">
-          <div className="w-[375px] h-[750px] border-[8px] border-zinc-800 rounded-[2.5rem] bg-black overflow-hidden shadow-2xl relative text-white">
-            <div className="absolute top-0 w-full h-40 bg-gradient-to-b from-purple-600/40 to-transparent"></div>
-            <div className="p-6 pt-20 flex flex-col h-full relative z-10 overflow-y-auto hide-scrollbar">
+          <div className={`w-[375px] h-[750px] border-[8px] border-zinc-800 rounded-[2.5rem] overflow-hidden shadow-2xl relative ${THEMES[formData.theme]?.bgWrapper.replace('min-h-screen', '') || ''}`}>
+            
+            {/* Background Blob Renders */}
+            {THEMES[formData.theme]?.renderBlobs && (
+              <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-purple-600/30 blur-[80px]"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-pink-600/30 blur-[80px]"></div>
+              </div>
+            )}
+
+            {/* Inner Profile Scroll Area */}
+            <div className="p-5 pt-12 flex flex-col h-full relative z-10 overflow-y-auto hide-scrollbar">
               
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-purple-400 to-pink-500 mb-6 p-1">
-                <div className="w-full h-full rounded-full bg-zinc-900 border-2 border-transparent overflow-hidden flex items-center justify-center">
+              <div className="w-24 h-24 rounded-full mx-auto mb-6 p-1 bg-gradient-to-br from-purple-400 to-pink-500 shrink-0">
+                <div className="w-full h-full rounded-full bg-black border-2 border-transparent overflow-hidden flex items-center justify-center">
                   {formData.image ? (
                     <img src={formData.image} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-zinc-600 text-xs text-center font-bold">Upload<br/>Pic</span>
+                    <span className="text-zinc-500 text-xs text-center font-bold">Image</span>
                   )}
                 </div>
               </div>
 
-              <h2 className="text-3xl font-black mb-1">{formData.name || 'Your Name'}</h2>
-              <p className="text-zinc-400 font-medium mb-2">@{formData.username || 'username'}</p>
+              <div className="text-center mb-6">
+                <h2 className={`${THEMES[formData.theme]?.title}`}>{formData.name || 'Your Name'}</h2>
+                <p className={`${THEMES[formData.theme]?.accentText} mb-3`}>@{formData.username || 'username'}</p>
 
-              {formData.location && (
-                <div className="flex items-center gap-1.5 text-zinc-500 text-sm font-semibold mb-4">
-                  <MapPin className="w-4 h-4" /> {formData.location}
-                </div>
-              )}
-              
-              <div className="px-4 py-2 bg-purple-500/10 border border-purple-500/30 rounded-xl text-purple-300 text-sm font-medium mb-6 inline-block w-fit">
-                {formData.malayalamTagline || "Your vibe here..."}
+                {formData.location && (
+                  <div className={`flex items-center justify-center gap-1.5 ${THEMES[formData.theme]?.accentText} text-sm mb-3`}>
+                    <MapPin className="w-4 h-4" /> {formData.location}
+                  </div>
+                )}
+                
+                {formData.malayalamTagline && (
+                  <div className="mb-4">
+                    <span className={THEMES[formData.theme]?.taglineBadge}>
+                      {formData.malayalamTagline}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <p className="text-zinc-300 leading-relaxed mb-6">
-                {formData.bio || 'Your bio will appear here.'}
-              </p>
+              {/* Bio & Contact Card */}
+              <div className={`${THEMES[formData.theme]?.card} mb-6`}>
+                <p className="text-sm leading-relaxed mb-6 font-medium opacity-90">
+                  {formData.bio || 'Your bio will appear here.'}
+                </p>
 
-              {(formData.contactEmail || formData.whatsapp) && (
-                <div className="flex flex-col gap-2 mb-8">
-                  {formData.contactEmail && (
-                    <a href={`mailto:${formData.contactEmail}`} className="w-full bg-white text-black font-extrabold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-zinc-200 transition">
-                      <Mail className="w-4 h-4" /> Let's Connect
-                    </a>
-                  )}
-                  {formData.whatsapp && (
-                    <a href={`https://wa.me/${formData.whatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="w-full bg-[#25D366]/20 text-[#25D366] font-extrabold py-3 border border-[#25D366]/30 rounded-xl flex items-center justify-center gap-2 hover:bg-[#25D366]/30 transition">
-                      <MessageCircle className="w-4 h-4" /> Message on WhatsApp
-                    </a>
-                  )}
-                </div>
-              )}
-
-              <h3 className="text-lg font-bold mb-3 border-b border-zinc-800 pb-2">Skills</h3>
-              <div className="flex flex-wrap gap-2 mb-8">
-                {formData.skills.split(',').map((skill, i) => (
-                  <span key={i} className="px-3 py-1 bg-zinc-800 rounded-full text-xs font-semibold">{skill.trim()}</span>
-                ))}
+                {(formData.contactEmail || formData.whatsapp) && (
+                  <div className="flex flex-col gap-3">
+                    {formData.contactEmail && (
+                      <a href="#" className={`w-full py-3 flex items-center justify-center gap-2 transition ${THEMES[formData.theme]?.primaryButton}`}>
+                        <Mail className="w-4 h-4" /> Let's Connect
+                      </a>
+                    )}
+                    {formData.whatsapp && (
+                      <a href="#" className={`w-full py-3 flex items-center justify-center gap-2 transition ${THEMES[formData.theme]?.primaryButton} !bg-[#25D366]/10 !text-[#25D366] !border-[#25D366]`}>
+                        <MessageCircle className="w-4 h-4" /> WhatsApp
+                      </a>
+                    )}
+                  </div>
+                )}
               </div>
 
+              {/* Skills Card */}
+              <div className={`${THEMES[formData.theme]?.card} mb-6`}>
+                <h3 className="text-xs font-bold uppercase tracking-widest mb-4 opacity-50">Skills</h3>
+                <div className="flex flex-wrap gap-2">
+                  {formData.skills.split(',').map((skill, i) => (
+                    <span key={i} className={THEMES[formData.theme]?.skillBadge}>{skill.trim()}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Projects Card */}
               {formData.projects?.length > 0 && (
-                <>
-                  <h3 className="text-lg font-bold mb-3 border-b border-zinc-800 pb-2">Projects</h3>
-                  <div className="flex flex-col gap-3 mb-8">
-                    {formData.projects.map((proj, idx) => (
-                      <div key={idx} className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden">
-                        {proj.image && (
-                          <div className="w-full h-32 rounded-lg bg-zinc-800 mb-3 overflow-hidden shrink-0">
-                            <img src={proj.image} className="w-full h-full object-cover" alt="Project Thumbnail" />
-                          </div>
-                        )}
-                        <h4 className="text-sm font-bold text-white mb-1">{proj.title}</h4>
-                        <p className="text-xs text-zinc-500 leading-relaxed mb-2 line-clamp-2">{proj.description}</p>
-                        {proj.link && <span className="text-xs font-bold text-purple-400">View Project ↗</span>}
-                      </div>
-                    ))}
-                  </div>
-                </>
+                <div className="mb-6 flex flex-col gap-4">
+                  <h3 className="text-xs font-bold uppercase tracking-widest mb-1 opacity-50 px-2">Projects</h3>
+                  {formData.projects.map((proj, idx) => (
+                    <div key={idx} className={`${THEMES[formData.theme]?.projectCard}`}>
+                      {proj.image && (
+                        <div className={`w-full h-32 overflow-hidden flex items-center justify-center ${THEMES[formData.theme]?.projectThumb}`}>
+                          <img src={proj.image} className="w-full h-full object-cover" alt="" />
+                        </div>
+                      )}
+                      <h4 className="text-sm font-bold mb-1 opacity-90">{proj.title}</h4>
+                      <p className="text-xs leading-relaxed opacity-70 line-clamp-2">{proj.description}</p>
+                    </div>
+                  ))}
+                </div>
               )}
 
-              <h3 className="text-lg font-bold mb-3 border-b border-zinc-800 pb-2 mt-auto pt-8">Connect</h3>
-              <div className="flex flex-wrap gap-3">
+              {/* Social Navigation */}
+              <div className="flex flex-wrap gap-3 justify-center mt-auto pt-6 pb-6 border-t border-white/10">
                 {formData.socialLinks.map((link, idx) => (
-                  <div key={idx} className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition cursor-pointer">
-                    <SocialIcon platform={link.platform} className="w-5 h-5 text-white" />
+                  <div key={idx} className={`w-10 h-10 flex items-center justify-center transition cursor-pointer ${THEMES[formData.theme]?.socialIconBg}`}>
+                    <SocialIcon platform={link.platform} className="w-4 h-4 flex-shrink-0" />
                   </div>
                 ))}
               </div>
+
             </div>
           </div>
         </div>
