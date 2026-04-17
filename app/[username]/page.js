@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { Instagram, Github, Linkedin, Calendar, ExternalLink, ArrowUpRight, Sparkles, Youtube } from 'lucide-react';
+import { Calendar, ExternalLink, ArrowUpRight, Sparkles } from 'lucide-react';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import Link from 'next/link';
+import { SocialIcon } from '@/components/SocialIcon';
 
 // Helper to fetch data
 async function getUserData(username) {
@@ -35,12 +36,11 @@ async function getUserData(username) {
           { title: "Bento Portfolio", description: "A highly customizable personal site with dynamic social cards.", link: "#" },
           { title: "Aesthetic Notes App", description: "A minimal, offline-first notes application with a dark UI.", link: "#" },
         ],
-        socialLinks: {
-          instagram: "alexdoe",
-          github: "alexdoe",
-          linkedin: "alexdoe",
-          youtube: "alexdoe"
-        }
+        socialLinks: [
+          { platform: 'GitHub', url: 'https://github.com/alexdoe' },
+          { platform: 'LinkedIn', url: 'https://linkedin.com/in/alexdoe' },
+          { platform: 'Instagram', url: 'https://instagram.com/alexdoe' }
+        ]
       }
     };
   }
@@ -114,26 +114,11 @@ export default async function DynamicPortfolioPage({ params }) {
           <div className="bento-card flex flex-col justify-center items-center gap-4">
             <h3 className="text-sm font-bold text-zinc-500 uppercase tracking-widest w-full text-left">Connect</h3>
             <div className="flex flex-wrap gap-3 w-full justify-center md:justify-start">
-              {portfolio.socialLinks?.instagram && (
-                <Link href={`https://instagram.com/${portfolio.socialLinks.instagram}`} target="_blank" className="flex items-center justify-center p-4 bg-zinc-800/50 hover:bg-zinc-700/80 rounded-2xl transition group flex-1">
-                  <Instagram className="w-6 h-6 text-zinc-400 group-hover:text-pink-500 transition" />
+              {portfolio.socialLinks?.map((link, idx) => (
+                <Link key={idx} href={link.url} target="_blank" className="flex items-center justify-center p-4 bg-zinc-800/50 hover:bg-zinc-700/80 rounded-2xl transition group flex-1 min-w-[60px]">
+                  <SocialIcon platform={link.platform} className="w-6 h-6 text-zinc-400 group-hover:text-white transition" />
                 </Link>
-              )}
-              {portfolio.socialLinks?.github && (
-                <Link href={`https://github.com/${portfolio.socialLinks.github}`} target="_blank" className="flex items-center justify-center p-4 bg-zinc-800/50 hover:bg-zinc-700/80 rounded-2xl transition group flex-1">
-                  <Github className="w-6 h-6 text-zinc-400 group-hover:text-white transition" />
-                </Link>
-              )}
-              {portfolio.socialLinks?.linkedin && (
-                <Link href={`https://linkedin.com/in/${portfolio.socialLinks.linkedin}`} target="_blank" className="flex items-center justify-center p-4 bg-zinc-800/50 hover:bg-zinc-700/80 rounded-2xl transition group flex-1">
-                  <Linkedin className="w-6 h-6 text-zinc-400 group-hover:text-blue-400 transition" />
-                </Link>
-              )}
-              {portfolio.socialLinks?.youtube && (
-                <Link href={`https://youtube.com/@${portfolio.socialLinks.youtube}`} target="_blank" className="flex items-center justify-center p-4 bg-zinc-800/50 hover:bg-zinc-700/80 rounded-2xl transition group flex-1">
-                  <Youtube className="w-6 h-6 text-zinc-400 group-hover:text-red-500 transition" />
-                </Link>
-              )}
+              ))}
             </div>
           </div>
         </div>

@@ -7,12 +7,10 @@ const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true, sparse: true },
   portfolio: {
     bio: String,
-    socialLinks: {
-      instagram: String,
-      linkedin: String,
-      github: String,
-      youtube: String,
-    },
+    socialLinks: [{
+      platform: String,
+      url: String,
+    }],
     skills: [String],
     projects: [{
       title: String,

@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from 'react';
-import { Sparkles, Save, Link as LinkIcon, Instagram, Github, Linkedin, Youtube, Image as ImageIcon } from 'lucide-react';
+import { Sparkles, Save, Link as LinkIcon, Image as ImageIcon, Plus, Trash2, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { savePortfolio } from './actions';
+import { SocialIcon, PLATFORMS } from '@/components/SocialIcon';
+
 const MALAYALAM_BIOS = [
   "Freelance Editor by day, Cinephile by night 🎬",
   "Oru cheriya developer, valiya swapnangal 🚀 (Small developer, big dreams)",
@@ -19,12 +21,15 @@ export default function OnboardingEditor() {
     bio: 'Creative Developer & Designer crafting next-generation digital experiences.',
     malayalamTagline: 'Oru cheriya developer, valiya swapnangal 🚀',
     skills: 'Next.js, Tailwind, MongoDB',
-    instagram: 'alexdoe',
-    github: 'alexdoe',
-    linkedin: 'alexdoe',
-    youtube: 'alexdoe',
+    socialLinks: [
+      { platform: 'GitHub', url: 'https://github.com/alexdoe' },
+      { platform: 'LinkedIn', url: 'https://linkedin.com/in/alexdoe' },
+      { platform: 'Instagram', url: 'https://instagram.com/alexdoe' }
+    ],
     image: '',
   });
+
+  const [newSocial, setNewSocial] = useState({ platform: 'GitHub', url: '' });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +50,23 @@ export default function OnboardingEditor() {
   const generateBio = () => {
     const randomBio = MALAYALAM_BIOS[Math.floor(Math.random() * MALAYALAM_BIOS.length)];
     setFormData((prev) => ({ ...prev, malayalamTagline: randomBio }));
+  };
+
+  const addSocialLink = () => {
+    if (newSocial.url.trim() !== '') {
+      setFormData(prev => ({
+        ...prev,
+        socialLinks: [...prev.socialLinks, newSocial]
+      }));
+      setNewSocial({ platform: 'GitHub', url: '' });
+    }
+  };
+
+  const removeSocialLink = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      socialLinks: prev.socialLinks.filter((_, i) => i !== index)
+    }));
   };
 
   const [isSaving, setIsSaving] = useState(false);
@@ -131,36 +153,65 @@ export default function OnboardingEditor() {
               <input type="text" name="malayalamTagline" value={formData.malayalamTagline} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500" />
             </div>
 
-            <div className="flex flex-col gap-2 mt-4">
-              <h3 className="text-sm font-bold text-white border-b border-zinc-800 pb-2">Social Hub</h3>
-              <div className="grid grid-cols-2 gap-4 mt-2">
-                <div className="flex items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-3 py-2 flex-1">
-                  <Instagram className="w-4 h-4 text-zinc-500 mr-2" />
-                  <input type="text" name="instagram" placeholder="Username" value={formData.instagram} onChange={handleInputChange} className="bg-transparent text-sm border-none outline-none flex-1 text-white w-full" />
-                </div>
-                <div className="flex items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-3 py-2 flex-1">
-                  <Github className="w-4 h-4 text-zinc-500 mr-2" />
-                  <input type="text" name="github" placeholder="Username" value={formData.github} onChange={handleInputChange} className="bg-transparent text-sm border-none outline-none flex-1 text-white w-full" />
-                </div>
-                <div className="flex items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-3 py-2 flex-1">
-                  <Linkedin className="w-4 h-4 text-zinc-500 mr-2" />
-                  <input type="text" name="linkedin" placeholder="Username" value={formData.linkedin} onChange={handleInputChange} className="bg-transparent text-sm border-none outline-none flex-1 text-white w-full" />
-                </div>
-                <div className="flex items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-3 py-2 flex-1">
-                  <Youtube className="w-4 h-4 text-zinc-500 mr-2" />
-                  <input type="text" name="youtube" placeholder="Channel" value={formData.youtube} onChange={handleInputChange} className="bg-transparent text-sm border-none outline-none flex-1 text-white w-full" />
-                </div>
-              </div>
-            </div>
-
             <div className="flex flex-col gap-2">
               <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Top Skills (comma separated)</label>
               <input type="text" name="skills" value={formData.skills} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500" />
             </div>
 
-            <button disabled={isSaving} type="submit" className="mt-4 bg-white text-black font-bold py-3 px-6 rounded-xl flex justify-center items-center gap-2 hover:bg-zinc-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
+            {/* Dynamic Social Hub */}
+            <div className="flex flex-col gap-2 mt-4">
+              <h3 className="text-sm font-bold text-white border-b border-zinc-800 pb-2">Social Hub</h3>
+              
+              <div className="flex flex-col gap-2">
+                {formData.socialLinks.map((link, index) => (
+                  <div key={index} className="flex justify-between items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-3 py-2">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <SocialIcon platform={link.platform} className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                      <span className="text-sm font-semibold text-zinc-300 truncate">{link.platform}</span>
+                      <span className="text-xs text-zinc-500 truncate">- {link.url}</span>
+                    </div>
+                    <button type="button" onClick={() => removeSocialLink(index)} className="text-red-400 hover:bg-red-500/20 p-2 rounded-lg transition ml-2">
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add New Link Form Row */}
+              <div className="flex flex-col sm:flex-row gap-2 mt-4 bg-zinc-800/30 p-2 rounded-2xl border border-zinc-700/50">
+                <div className="relative w-full sm:w-1/3">
+                  <select
+                    value={newSocial.platform}
+                    onChange={(e) => setNewSocial({ ...newSocial, platform: e.target.value })}
+                    className="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 shadow-inner text-sm text-zinc-200 rounded-xl pl-4 pr-10 py-3 appearance-none outline-none focus:ring-2 focus:ring-purple-500 transition cursor-pointer"
+                  >
+                    {PLATFORMS.map((p) => (
+                      <option key={p} value={p} className="bg-zinc-900 text-white">{p}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+                </div>
+                <input
+                  type="url"
+                  placeholder="Paste URL here..."
+                  value={newSocial.url}
+                  onChange={(e) => setNewSocial({ ...newSocial, url: e.target.value })}
+                  className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500 flex-1 transition"
+                />
+                <button
+                  type="button"
+                  onClick={addSocialLink}
+                  disabled={!newSocial.url.trim()}
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 text-white shadow-lg font-bold py-3 px-5 rounded-xl flex items-center justify-center transition shrink-0"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            <button disabled={isSaving} type="submit" className="mt-8 bg-white text-black font-bold py-3 px-6 rounded-xl flex justify-center items-center gap-2 hover:bg-zinc-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
               <Save className="w-5 h-5" />
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isSaving ? "Saving..." : "Save All Changes"}
             </button>
           </form>
         </div>
@@ -200,11 +251,12 @@ export default function OnboardingEditor() {
               </div>
 
               <h3 className="text-lg font-bold mb-3 border-b border-zinc-800 pb-2 mt-auto pt-8">Connect</h3>
-              <div className="flex gap-4">
-                {formData.instagram && <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition cursor-pointer"><Instagram className="w-5 h-5"/></div>}
-                {formData.github && <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition cursor-pointer"><Github className="w-5 h-5"/></div>}
-                {formData.linkedin && <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition cursor-pointer"><Linkedin className="w-5 h-5"/></div>}
-                {formData.youtube && <div className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition cursor-pointer"><Youtube className="w-5 h-5"/></div>}
+              <div className="flex flex-wrap gap-3">
+                {formData.socialLinks.map((link, idx) => (
+                  <div key={idx} className="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center hover:bg-zinc-700 transition cursor-pointer">
+                    <SocialIcon platform={link.platform} className="w-5 h-5 text-white" />
+                  </div>
+                ))}
               </div>
             </div>
           </div>
