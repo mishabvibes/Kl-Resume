@@ -52,7 +52,7 @@ export default function LandingPage() {
               </Link>
               <div className="flex items-center gap-4 px-8 py-5 text-zinc-500 font-bold">
                 <div className="flex -space-x-3">
-                  {[1,2,3,4].map(i => (
+                  {[1, 2, 3, 4].map(i => (
                     <div key={i} className="w-10 h-10 rounded-full border-2 border-black bg-zinc-800 flex items-center justify-center text-[10px] font-black italic uppercase">
                       User_{i}
                     </div>
@@ -66,19 +66,19 @@ export default function LandingPage() {
 
         {/* Hero Showcase Image */}
         <section className="px-6 mb-32">
-           <Link href="/showcase" className="max-w-6xl mx-auto rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl relative group block">
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-20"></div>
-              <img 
-                src="file:///C:/Users/mdmis/.gemini/antigravity/brain/a3043960-e8fd-4d4d-9826-9df12905cabb/landing_hero_mockup_1776446183908.png" 
-                alt="Portfolio Themes Showcase" 
-                className="w-full h-auto transform group-hover:scale-105 transition-transform duration-[2s]"
-              />
-              <div className="absolute bottom-12 left-12 z-30 flex flex-wrap gap-4">
-                 {['View All Themes', 'Bento Grid', 'Cyber HUD', 'Hacker Terminal'].map(tag => (
-                   <span key={tag} className="px-4 py-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-full text-xs font-black uppercase tracking-widest">{tag}</span>
-                 ))}
-              </div>
-           </Link>
+          <Link href="/showcase" className="max-w-6xl mx-auto rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl relative group block">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-20"></div>
+            <img
+              src="/images/landing_hero_mockup.png"
+              alt="Portfolio Themes Showcase"
+              className="w-full h-auto transform group-hover:scale-105 transition-transform duration-[2s]"
+            />
+            <div className="absolute bottom-12 left-12 z-30 flex flex-wrap gap-4">
+              {['View All Themes', 'Bento Grid', 'Cyber HUD', 'Hacker Terminal'].map(tag => (
+                <span key={tag} className="px-4 py-2 bg-black/40 backdrop-blur-md border border-white/20 rounded-full text-xs font-black uppercase tracking-widest">{tag}</span>
+              ))}
+            </div>
+          </Link>
         </section>
 
         {/* Features Grid */}
@@ -107,22 +107,22 @@ export default function LandingPage() {
         {/* Stats Section */}
         <section className="py-32 px-6">
           <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-             <div>
-                <span className="text-4xl md:text-6xl font-black block mb-2 tracking-tighter italic">10+</span>
-                <span className="text-xs font-black text-zinc-500 uppercase tracking-[0.3em]">Themes</span>
-             </div>
-             <div>
-                <span className="text-4xl md:text-6xl font-black block mb-2 tracking-tighter italic">5K+</span>
-                <span className="text-xs font-black text-zinc-500 uppercase tracking-[0.3em]">Signups</span>
-             </div>
-             <div>
-                <span className="text-4xl md:text-6xl font-black block mb-2 tracking-tighter italic">100%</span>
-                <span className="text-xs font-black text-zinc-500 uppercase tracking-[0.3em]">Free</span>
-             </div>
-             <div>
-                <span className="text-4xl md:text-6xl font-black block mb-2 tracking-tighter italic">24/7</span>
-                <span className="text-xs font-black text-zinc-500 uppercase tracking-[0.3em]">Support</span>
-             </div>
+            <div>
+              <span className="text-4xl md:text-6xl font-black block mb-2 tracking-tighter italic">10+</span>
+              <span className="text-xs font-black text-zinc-500 uppercase tracking-[0.3em]">Themes</span>
+            </div>
+            <div>
+              <span className="text-4xl md:text-6xl font-black block mb-2 tracking-tighter italic">5K+</span>
+              <span className="text-xs font-black text-zinc-500 uppercase tracking-[0.3em]">Signups</span>
+            </div>
+            <div>
+              <span className="text-4xl md:text-6xl font-black block mb-2 tracking-tighter italic">100%</span>
+              <span className="text-xs font-black text-zinc-500 uppercase tracking-[0.3em]">Free</span>
+            </div>
+            <div>
+              <span className="text-4xl md:text-6xl font-black block mb-2 tracking-tighter italic">24/7</span>
+              <span className="text-xs font-black text-zinc-500 uppercase tracking-[0.3em]">Support</span>
+            </div>
           </div>
         </section>
 
@@ -131,10 +131,10 @@ export default function LandingPage() {
           <div className="max-w-5xl mx-auto bg-gradient-to-tr from-purple-600 to-pink-600 rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden group">
             <div className="absolute inset-0 bg-black opacity-10 group-hover:opacity-0 transition-opacity"></div>
             <div className="relative z-10">
-               <h2 className="text-4xl md:text-7xl font-black italic tracking-tighter leading-none mb-12 uppercase">Ready to start <br /> your journey?</h2>
-               <Link href="/editor" className="inline-flex items-center gap-3 bg-white text-black px-12 py-6 rounded-2xl font-black text-2xl hover:bg-zinc-200 transition-all active:scale-95">
-                 GET STARTED <Rocket className="w-8 h-8" />
-               </Link>
+              <h2 className="text-4xl md:text-7xl font-black italic tracking-tighter leading-none mb-12 uppercase">Ready to start <br /> your journey?</h2>
+              <Link href="/editor" className="inline-flex items-center gap-3 bg-white text-black px-12 py-6 rounded-2xl font-black text-2xl hover:bg-zinc-200 transition-all active:scale-95">
+                GET STARTED <Rocket className="w-8 h-8" />
+              </Link>
             </div>
           </div>
         </section>
