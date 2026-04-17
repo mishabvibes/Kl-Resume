@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Sparkles, Save, Link as LinkIcon, Image as ImageIcon, Plus, Trash2, ChevronDown, Mail, MessageCircle, MapPin } from 'lucide-react';
+import { Sparkles, Save, Link as LinkIcon, Image as ImageIcon, Plus, Trash2, ChevronDown, Mail, MessageCircle, MapPin, ArrowRight, ArrowLeft, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { savePortfolio } from './actions';
 import { SocialIcon, PLATFORMS } from '@/components/SocialIcon';
@@ -15,6 +15,9 @@ const MALAYALAM_BIOS = [
 ];
 
 export default function OnboardingEditor() {
+  const [currentStep, setCurrentStep] = useState(1);
+  const totalSteps = 4;
+
   const [formData, setFormData] = useState({
     name: 'Alex Doe',
     username: 'alex',
@@ -107,11 +110,11 @@ export default function OnboardingEditor() {
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setIsSaving(true);
     try {
       const response = await savePortfolio(formData);
-      alert(response.message);
+      alert(response.message || "Portfolio saved efficiently!");
     } catch (error) {
       alert("Error saving data!");
     } finally {
@@ -140,194 +143,248 @@ export default function OnboardingEditor() {
       </header>
 
       <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 relative">
-        {/* The Editor Sidebar */}
-        <div className="bento-card flex flex-col gap-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-yellow-400" />
-              Customize Portfolio
-            </h2>
+        {/* The Editor Sidebar (Wizard) */}
+        <div className="bento-card flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-yellow-400" />
+                Customize Portfolio
+              </h2>
+              <p className="text-xs text-zinc-400 mt-2 font-semibold uppercase tracking-widest">
+                Step {currentStep} of {totalSteps}: {['Personal Info', 'Contact & Socials', 'Skills & Projects', 'Deploy'][currentStep - 1]}
+              </p>
+            </div>
+          </div>
+          
+          {/* Progress Bar */}
+          <div className="w-full h-1 bg-zinc-800 rounded-full mb-8 overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500 ease-out" style={{ width: `${(currentStep / totalSteps) * 100}%` }}></div>
           </div>
 
-          <form onSubmit={handleSave} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Profile Picture</label>
-              <div className="flex items-center gap-4 bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3">
-                <label className="cursor-pointer bg-zinc-700 hover:bg-zinc-600 text-white text-xs font-semibold py-2 px-4 rounded-lg flex items-center gap-2 transition">
-                  <ImageIcon className="w-4 h-4" />
-                  Upload Image
-                  <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-                </label>
-                {formData.image && <span className="text-xs text-green-400 font-semibold">Image loaded!</span>}
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Name</label>
-              <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500" />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Username (URL)</label>
-              <div className="flex items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-purple-500">
-                <span className="text-zinc-500">klresume.in/</span>
-                <input type="text" name="username" value={formData.username} onChange={handleInputChange} className="bg-transparent border-none outline-none flex-1 text-white" />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Bio</label>
-              <textarea name="bio" value={formData.bio} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 h-24 resize-none"></textarea>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Malayalam Tagline</label>
-                <button type="button" onClick={generateBio} className="text-xs text-purple-400 hover:text-purple-300 font-medium">Auto-Generate 🔮</button>
-              </div>
-              <input type="text" name="malayalamTagline" value={formData.malayalamTagline} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500" />
-            </div>
-
-            <div className="flex flex-col gap-2 mt-4">
-              <h3 className="text-sm font-bold text-white border-b border-zinc-800 pb-2">Contact & Location</h3>
-              
-              <div className="flex flex-col gap-2 mt-1">
-                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Public Contact Email</label>
-                <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleInputChange} placeholder="hello@example.com" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">WhatsApp (with country code)</label>
-                <input type="text" name="whatsapp" value={formData.whatsapp || ''} onChange={handleInputChange} placeholder="+919876543210" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Location</label>
-                <input type="text" name="location" value={formData.location || ''} onChange={handleInputChange} placeholder="Kochi, Kerala" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Top Skills (comma separated)</label>
-              <input type="text" name="skills" value={formData.skills} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500" />
-            </div>
-
-            {/* Dynamic Social Hub */}
-            <div className="flex flex-col gap-2 mt-4">
-              <h3 className="text-sm font-bold text-white border-b border-zinc-800 pb-2">Social Hub</h3>
-              
-              <div className="flex flex-col gap-2">
-                {formData.socialLinks.map((link, index) => (
-                  <div key={index} className="flex justify-between items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-3 py-2">
-                    <div className="flex items-center gap-2 overflow-hidden">
-                      <SocialIcon platform={link.platform} className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-sm font-semibold text-zinc-300 truncate">{link.platform}</span>
-                      <span className="text-xs text-zinc-500 truncate">- {link.url}</span>
-                    </div>
-                    <button type="button" onClick={() => removeSocialLink(index)} className="text-red-400 hover:bg-red-500/20 p-2 rounded-lg transition ml-2">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+          <form onSubmit={(e) => e.preventDefault()} className="flex-1">
+            
+            {/* STEP 1: PERSONAL INFO */}
+            {currentStep === 1 && (
+              <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Profile Picture</label>
+                  <div className="flex items-center gap-4 bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3">
+                    <label className="cursor-pointer bg-zinc-700 hover:bg-zinc-600 text-white text-xs font-semibold py-2 px-4 rounded-lg flex items-center gap-2 transition">
+                      <ImageIcon className="w-4 h-4" />
+                      Upload Image
+                      <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+                    </label>
+                    {formData.image && <span className="text-xs text-green-400 font-semibold">Image loaded!</span>}
                   </div>
-                ))}
-              </div>
-
-              {/* Add New Link Form Row */}
-              <div className="flex flex-col sm:flex-row gap-2 mt-4 bg-zinc-800/30 p-2 rounded-2xl border border-zinc-700/50">
-                <div className="relative w-full sm:w-1/3">
-                  <select
-                    value={newSocial.platform}
-                    onChange={(e) => setNewSocial({ ...newSocial, platform: e.target.value })}
-                    className="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 shadow-inner text-sm text-zinc-200 rounded-xl pl-4 pr-10 py-3 appearance-none outline-none focus:ring-2 focus:ring-purple-500 transition cursor-pointer"
-                  >
-                    {PLATFORMS.map((p) => (
-                      <option key={p} value={p} className="bg-zinc-900 text-white">{p}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
                 </div>
-                <input
-                  type="url"
-                  placeholder="Paste URL here..."
-                  value={newSocial.url}
-                  onChange={(e) => setNewSocial({ ...newSocial, url: e.target.value })}
-                  className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500 flex-1 transition"
-                />
-                <button
-                  type="button"
-                  onClick={addSocialLink}
-                  disabled={!newSocial.url.trim()}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 text-white shadow-lg font-bold py-3 px-5 rounded-xl flex items-center justify-center transition shrink-0"
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
 
-            {/* Dynamic Projects Showcase */}
-            <div className="flex flex-col gap-2 mt-4">
-              <h3 className="text-sm font-bold text-white border-b border-zinc-800 pb-2">Projects Showcase</h3>
-              
-              <div className="flex flex-col gap-3 mt-2">
-                {formData.projects.map((proj, index) => (
-                  <div key={index} className="flex flex-col gap-2 bg-zinc-800/50 border border-zinc-700 rounded-xl p-3 relative group overflow-hidden">
-                    {proj.image && (
-                      <div className="w-full h-24 mb-2 rounded-lg overflow-hidden bg-zinc-900 border border-zinc-800 shrink-0">
-                        <img src={proj.image} className="w-full h-full object-cover" alt="Project thumb" />
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Name</label>
+                  <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white" />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Username (URL)</label>
+                  <div className="flex items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus-within:ring-2 focus-within:ring-purple-500">
+                    <span className="text-zinc-500">klresume.in/</span>
+                    <input type="text" name="username" value={formData.username} onChange={handleInputChange} className="bg-transparent border-none outline-none flex-1 text-white" />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Bio</label>
+                  <textarea name="bio" value={formData.bio} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 h-24 resize-none text-white"></textarea>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Malayalam Tagline</label>
+                    <button type="button" onClick={generateBio} className="text-xs text-purple-400 hover:text-purple-300 font-medium">Auto-Generate 🔮</button>
+                  </div>
+                  <input type="text" name="malayalamTagline" value={formData.malayalamTagline} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white" />
+                </div>
+              </div>
+            )}
+
+            {/* STEP 2: CONTACT & SOCIALS */}
+            {currentStep === 2 && (
+              <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Public Contact Email</label>
+                  <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleInputChange} placeholder="hello@example.com" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">WhatsApp (with country code)</label>
+                  <input type="text" name="whatsapp" value={formData.whatsapp || ''} onChange={handleInputChange} placeholder="+919876543210" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Location</label>
+                  <input type="text" name="location" value={formData.location || ''} onChange={handleInputChange} placeholder="Kochi, Kerala" className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white placeholder-zinc-500" />
+                </div>
+
+                <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-zinc-800/50">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Social Hub</label>
+                  <div className="flex flex-col gap-2">
+                    {formData.socialLinks.map((link, index) => (
+                      <div key={index} className="flex justify-between items-center bg-zinc-800/50 border border-zinc-700 rounded-xl px-3 py-2">
+                        <div className="flex items-center gap-2 overflow-hidden">
+                          <SocialIcon platform={link.platform} className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                          <span className="text-sm font-semibold text-zinc-300 truncate">{link.platform}</span>
+                          <span className="text-xs text-zinc-500 truncate">- {link.url}</span>
+                        </div>
+                        <button type="button" onClick={() => removeSocialLink(index)} className="text-red-400 hover:bg-red-500/20 p-2 rounded-lg transition ml-2">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
-                    )}
-                    <h4 className="text-white font-bold text-sm pr-8 truncate">{proj.title}</h4>
-                    <p className="text-zinc-400 text-xs line-clamp-2">{proj.description}</p>
-                    {proj.link && <a href={proj.link} target="_blank" className="text-purple-400 text-xs hover:underline truncate">{proj.link}</a>}
-                    
-                    <button type="button" onClick={() => removeProject(index)} className="absolute top-3 right-3 text-red-400 hover:bg-red-500/20 p-1.5 rounded-lg transition sm:opacity-0 group-hover:opacity-100 flex items-center justify-center">
-                      <Trash2 className="w-4 h-4" />
+                    ))}
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2 mt-2 bg-zinc-800/30 p-2 rounded-2xl border border-zinc-700/50">
+                    <div className="relative w-full sm:w-1/3">
+                      <select
+                        value={newSocial.platform}
+                        onChange={(e) => setNewSocial({ ...newSocial, platform: e.target.value })}
+                        className="w-full bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 shadow-inner text-sm text-zinc-200 rounded-xl pl-4 pr-10 py-3 appearance-none outline-none focus:ring-2 focus:ring-purple-500 transition cursor-pointer"
+                      >
+                        {PLATFORMS.map((p) => (
+                          <option key={p} value={p} className="bg-zinc-900 text-white">{p}</option>
+                        ))}
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+                    </div>
+                    <input
+                      type="url"
+                      placeholder="Paste URL here..."
+                      value={newSocial.url}
+                      onChange={(e) => setNewSocial({ ...newSocial, url: e.target.value })}
+                      className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500 flex-1 transition"
+                    />
+                    <button
+                      type="button"
+                      onClick={addSocialLink}
+                      disabled={!newSocial.url.trim()}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 text-white shadow-lg font-bold py-3 px-5 rounded-xl flex items-center justify-center transition shrink-0"
+                    >
+                      <Plus className="w-5 h-5" />
                     </button>
                   </div>
-                ))}
+                </div>
               </div>
+            )}
 
-              {/* Add New Project Form */}
-              <div className="flex flex-col gap-2 mt-2 bg-zinc-800/30 p-3 rounded-2xl border border-zinc-700/50">
-                <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 text-xs font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition outline-none">
-                  <ImageIcon className="w-4 h-4" />
-                  {newProject.image ? "Thumbnail Selected ✔" : "Upload Thumbnail (Optional)"}
-                  <input type="file" accept="image/*" onChange={handleProjectImageUpload} className="hidden" />
-                </label>
-                <input
-                  type="text"
-                  placeholder="Project Title (e.g. Aesthetic Notes App)"
-                  value={newProject.title}
-                  onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
-                  className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500"
-                />
-                <input
-                  type="url"
-                  placeholder="Project Link URL"
-                  value={newProject.link}
-                  onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
-                  className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500"
-                />
-                <textarea
-                  placeholder="Short description..."
-                  value={newProject.description}
-                  onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                  className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500 resize-none h-16"
-                />
-                <button
+            {/* STEP 3: SKILLS & PROJECTS */}
+            {currentStep === 3 && (
+              <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-300">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">Top Skills (comma separated)</label>
+                  <input type="text" name="skills" value={formData.skills} onChange={handleInputChange} className="bg-zinc-800/50 border border-zinc-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 text-white" />
+                </div>
+
+                <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-zinc-800/50">
+                  <label className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-2">Projects Showcase</label>
+                  <div className="flex flex-col gap-3 mt-2">
+                    {formData.projects.map((proj, index) => (
+                      <div key={index} className="flex flex-col gap-2 bg-zinc-800/50 border border-zinc-700 rounded-xl p-3 relative group overflow-hidden">
+                        {proj.image && (
+                          <div className="w-full h-24 mb-2 rounded-lg overflow-hidden bg-zinc-900 border border-zinc-800 shrink-0">
+                            <img src={proj.image} className="w-full h-full object-cover" alt="Project thumb" />
+                          </div>
+                        )}
+                        <h4 className="text-white font-bold text-sm pr-8 truncate">{proj.title}</h4>
+                        <p className="text-zinc-400 text-xs line-clamp-2">{proj.description}</p>
+                        {proj.link && <a href={proj.link} target="_blank" className="text-purple-400 text-xs hover:underline truncate">{proj.link}</a>}
+                        
+                        <button type="button" onClick={() => removeProject(index)} className="absolute top-3 right-3 text-red-400 hover:bg-red-500/20 p-1.5 rounded-lg transition sm:opacity-0 group-hover:opacity-100 flex items-center justify-center">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex flex-col gap-2 mt-2 bg-zinc-800/30 p-3 rounded-2xl border border-zinc-700/50">
+                    <label className="cursor-pointer bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 text-xs font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition outline-none">
+                      <ImageIcon className="w-4 h-4" />
+                      {newProject.image ? "Thumbnail Selected ✔" : "Upload Thumbnail (Optional)"}
+                      <input type="file" accept="image/*" onChange={handleProjectImageUpload} className="hidden" />
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Project Title (e.g. Aesthetic Notes App)"
+                      value={newProject.title}
+                      onChange={(e) => setNewProject({ ...newProject, title: e.target.value })}
+                      className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    <input
+                      type="url"
+                      placeholder="Project Link URL"
+                      value={newProject.link}
+                      onChange={(e) => setNewProject({ ...newProject, link: e.target.value })}
+                      className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500"
+                    />
+                    <textarea
+                      placeholder="Short description..."
+                      value={newProject.description}
+                      onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
+                      className="bg-zinc-800 border border-zinc-700 text-sm text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-purple-500 resize-none h-16"
+                    />
+                    <button
+                      type="button"
+                      onClick={addProject}
+                      disabled={!newProject.title.trim()}
+                      className="mt-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 text-white text-sm font-bold py-2 rounded-xl flex items-center justify-center gap-2 transition"
+                    >
+                      <Plus className="w-4 h-4" /> Add Project
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* STEP 4: FINAL DEPLOYMENT */}
+            {currentStep === 4 && (
+              <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300 items-center text-center py-10">
+                <div className="w-16 h-16 bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mb-2">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-black text-white">You're Ready to Publish!</h3>
+                <p className="text-zinc-400">Review your live portfolio on the right. If everything looks perfect, click save below to deploy to the live URL.</p>
+                
+                <button 
                   type="button"
-                  onClick={addProject}
-                  disabled={!newProject.title.trim()}
-                  className="mt-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 disabled:opacity-50 text-white text-sm font-bold py-2 rounded-xl flex items-center justify-center gap-2 transition"
+                  disabled={isSaving} 
+                  onClick={handleSave} 
+                  className="mt-4 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-black py-4 px-6 rounded-2xl flex justify-center items-center gap-2 hover:from-purple-500 hover:to-pink-500 shadow-xl shadow-purple-500/20 transition disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                 >
-                  <Plus className="w-4 h-4" /> Add Project
+                  <Save className="w-5 h-5" />
+                  {isSaving ? "Saving Portfolio..." : "Deploy Portfolio"}
                 </button>
               </div>
+            )}
+
+            {/* Navigation Controls */}
+            <div className={`flex justify-between items-center mt-10 pt-6 border-t border-zinc-800/50 ${currentStep === 4 ? 'hidden' : ''}`}>
+              <button 
+                type="button" 
+                onClick={() => setCurrentStep(prev => prev - 1)} 
+                className={`px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white text-sm font-bold rounded-xl transition flex items-center gap-2 ${currentStep === 1 ? 'opacity-0 pointer-events-none' : ''}`}
+              >
+                <ArrowLeft className="w-4 h-4" /> Back
+              </button>
+
+              {currentStep < totalSteps && (
+                <button 
+                  type="button" 
+                  onClick={() => setCurrentStep(prev => prev + 1)} 
+                  className="px-6 py-2.5 bg-white text-black hover:bg-zinc-200 text-sm font-bold rounded-xl transition flex items-center gap-2"
+                >
+                  Next Step <ArrowRight className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
-            <button disabled={isSaving} type="submit" className="mt-8 bg-white text-black font-bold py-3 px-6 rounded-xl flex justify-center items-center gap-2 hover:bg-zinc-200 transition disabled:opacity-50 disabled:cursor-not-allowed">
-              <Save className="w-5 h-5" />
-              {isSaving ? "Saving..." : "Save All Changes"}
-            </button>
           </form>
         </div>
 
