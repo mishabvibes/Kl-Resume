@@ -41,3 +41,17 @@ export async function deleteUserAction(id) {
   
   revalidatePath('/admin');
 }
+
+export async function updateUserAction(id, data) {
+  const secretKey = process.env.ADMIN_SECRET || 'fallback-secret-klresume';
+  const token = cookies().get('admin_token');
+
+  if (!token || token.value !== secretKey) {
+    throw new Error("Unauthorized");
+  }
+
+  await dbConnect();
+  await User.findByIdAndUpdate(id, data);
+  
+  revalidatePath('/admin');
+}

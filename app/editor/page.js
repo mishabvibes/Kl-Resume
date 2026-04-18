@@ -10,6 +10,31 @@ import { SocialIcon, PLATFORMS } from '@/components/SocialIcon';
 import { THEMES } from '../themes';
 import { ThemeLayouts } from '@/components/themes';
 
+const SAMPLE_DATA = {
+  name: "Alex Doe",
+  username: "alexdoe",
+  careerField: "Creative Developer",
+  bio: "Passionate about building digital experiences that blend art and technology. Based in Kerala, working globally.",
+  malayalamTagline: "Oru cheriya developer, valiya swapnangal 🚀",
+  contactEmail: "hello@alexdoe.dev",
+  whatsapp: "+919876543210",
+  location: "Kochi, Kerala",
+  skills: "React, Next.js, Framer Motion, TailwinCSS, Node.js",
+  theme: 'bento-dark',
+  socialLinks: [
+    { platform: 'GitHub', url: 'https://github.com' },
+    { platform: 'Twitter', url: 'https://twitter.com' },
+    { platform: 'LinkedIn', url: 'https://linkedin.com' }
+  ],
+  projects: [
+    { title: 'Project Alpha', description: 'A revolutionary bento-style task manager.', link: '#', image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=400' },
+    { title: 'Cyber UI Kit', description: 'Futuristic components for the modern web.', link: '#', image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400' }
+  ],
+  education: [{ school: 'CET Trivandrum', degree: 'B.Tech CS', year: '2020 - 2024' }],
+  experience: [{ company: 'Tech Hub', role: 'Fullstack Intern', duration: '6 Months', description: 'Worked on modern web stacks.' }],
+  image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=400',
+};
+
 const MALAYALAM_BIOS = [
   "Freelance Editor by day, Cinephile by night 🎬",
   "Oru cheriya developer, valiya swapnangal 🚀 (Small developer, big dreams)",
@@ -668,8 +693,12 @@ function EditorContent() {
             <div className="w-full relative min-h-full">
                     {(() => {
                       const LayoutComponent = ThemeLayouts[formData.theme] || ThemeLayouts['bento-dark'];
-                      const skillsArray = typeof formData.skills === 'string' ? formData.skills.split(',').map(s => s.trim()) : formData.skills;
-                      return <LayoutComponent data={{ ...formData, portfolio: { ...formData, skills: skillsArray } }} />
+                      
+                      // If name is empty, we assume it's a sample preview for unauthenticated/new users
+                      const displayData = formData.name ? formData : { ...SAMPLE_DATA, theme: formData.theme };
+                      const skillsArray = typeof displayData.skills === 'string' ? displayData.skills.split(',').map(s => s.trim()) : displayData.skills;
+                      
+                      return <LayoutComponent data={{ ...displayData, portfolio: { ...displayData, skills: skillsArray } }} />
                     })()}
             </div>
           </div>
